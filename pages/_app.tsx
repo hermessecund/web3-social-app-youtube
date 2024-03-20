@@ -10,7 +10,7 @@ const activeChain = "mumbai";
 function MyApp({ Component, pageProps }: AppProps) {
   //Set up smart wallet config
   const smartWalletConfig = {
-    factoryAddress: "0xb073ab62195b46fd43ae74e86fb978f0a234d94b",
+    factoryAddress: "0x83eE9EF2CE5072F44FD14bf575CA6bB2D704F734",
     gasless: true,
   };
   
