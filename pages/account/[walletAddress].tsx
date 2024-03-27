@@ -7,7 +7,7 @@ import Lottie from 'lottie-react';
 import loadingLottie from '../../public/loadingLottie.json';
 import { useEffect, useState } from 'react';
 
-export default function AcountFeed() {
+export default function AccountFeed() {
     const router = useRouter();
     const { walletAddress } = router.query;
     
@@ -27,7 +27,7 @@ export default function AcountFeed() {
         subscribe: true,
         queryFilter: {
             filters: {
-                user: walletAddress,
+                owner: walletAddress, // Assuming 'owner' is the name of the indexed parameter
             }
         }
     }
@@ -69,9 +69,9 @@ export default function AcountFeed() {
                 userEvents.slice(0, 20).map((event, index) => (
                     <EventCard
                         key={index}
-                        walletAddress={event.data.user}
-                        newStatus={event.data.newStatus}
-                        timeStamp={event.data.timestamp}
+                        walletAddress={event.args.owner}
+                        newStatus={event.args.newStatus}
+                        timeStamp={event.args.timeverseAge}
                     />
                 ))
             )}
