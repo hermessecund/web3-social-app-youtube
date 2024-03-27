@@ -22,7 +22,7 @@ export default function UserStatus() {
     const {
         data: myStatus,
         isLoading: isMyStatusLoading,
-    } = useContractRead(contract, "getStatus", [address]);
+    } = useContractRead(contract, "usrMsgByAddress", [address]);
 
     if (!address) {
         return (
