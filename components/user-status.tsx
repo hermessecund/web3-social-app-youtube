@@ -1,4 +1,4 @@
-import { ConnectWallet, Web3Button, useAddress, useContract, useContractRead, useDisconnect } from "@thirdweb-dev/react";
+import { ConnectWallet, Web3Button, useAddress, useContract } from "@thirdweb-dev/react";
 import { STATUS_CONTRACT_ADDRESS } from "../constants/addresses";
 import { useState } from "react";
 import styles from "../styles/Home.module.css";
@@ -9,7 +9,6 @@ import Link from "next/link";
 
 export default function UserStatus() {
     const address = useAddress();
-    const disconnect = useDisconnect();
     const [newStatus, setNewStatus] = useState("");
     const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
     const [characterCount, setCharacterCount] = useState(0);
@@ -19,10 +18,15 @@ export default function UserStatus() {
         contract
     } = useContract(STATUS_CONTRACT_ADDRESS);
 
-    const {
-        data: myStatus,
-        isLoading: isMyStatusLoading,
-    } = useContractRead(contract, "usrMsgByAddress", [address]);
+    const createMessage = async () => {
+        try {
+            await contract.call("CreateMessage", [newStatus]);
+            setIsStatusModalOpen(false);
+            setNewStatus("");
+        } catch (error) {
+            console.error("Error updating status:", error);
+        }
+    };
 
     if (!address) {
         return (
@@ -30,8 +34,8 @@ export default function UserStatus() {
                 <ConnectWallet
                     modalSize="compact"
                     dropdownPosition={{
-                    side: "bottom",
-                    align: "start",
+                        side: "bottom",
+                        align: "start",
                     }}
                 />
                 <p>Please connect your wallet.</p>
@@ -39,34 +43,12 @@ export default function UserStatus() {
         );
     }
 
-    if (isMyStatusLoading) {
-        return (
-            <div className={styles.sectionLoading}>
-                <Lottie
-                    animationData={loadingLottie}
-                    loop={true}
-                />
-            </div>
-        );
-    }
-
     return (
         <div className={styles.userContainer}>
             <div className={styles.statusHeader}>
-                <Link href={`/account/${address}`} style={{ color: "white"}}>
-                    <p className={styles.connectedAddress}>{truncateAddress(address!)}</p>
-                </Link>
-                <button
-                    className={styles.logoutButton}
-                    onClick={() => disconnect()}
-                >Logout</button>
+                <p className={styles.connectedAddress}>{truncateAddress(address!)}</p>
             </div>
             
-            {!isMyStatusLoading && myStatus && (
-                <div>
-                    <p className={styles.statusText}>{myStatus}</p>
-                </div>
-            )}
             <button
                 className={styles.updateButton}
                 onClick={() => setIsStatusModalOpen(true)}
@@ -95,19 +77,12 @@ export default function UserStatus() {
                         <Web3Button
                             className={styles.statusModalButton}
                             contractAddress={STATUS_CONTRACT_ADDRESS}
-                            action={(contract) => contract.call(
-                                "setStatus",
-                                [newStatus]
-                            )}
+                            action={createMessage}
                             isDisabled={characterCount === 0 || characterCount > 140}
-                            onSuccess={() => {
-                                setIsStatusModalOpen(false);
-                                setNewStatus("");
-                            }}
                         >Update Status</Web3Button>
                     </div>
                 </div>
             )}
         </div>
     );
-};
+}
