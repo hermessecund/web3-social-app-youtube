@@ -2,10 +2,6 @@ import { useAddress } from "@thirdweb-dev/react";
 import styles from "../styles/Home.module.css";
 import { NextPage } from "next";
 
-import { useEffect, useState } from "react";
-import Lottie from "lottie-react";
-import loadingLottie from "../public/loadingLottie.json";
-
 const Home: NextPage = () => {
   const address = useAddress();
   return (
