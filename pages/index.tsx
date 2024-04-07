@@ -19,6 +19,7 @@ const Home: NextPage = () => {
         <div className={styles.statusContainer}>
         hello
       </div>
+      </div>
     </main>
   );
 };
