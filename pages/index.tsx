@@ -8,10 +8,6 @@ import loadingLottie from "../public/loadingLottie.json";
 
 const Home: NextPage = () => {
   const address = useAddress();
-  const [isLoading, setIsLoading] = useState(true);
-
-
-
   return (
     <main className={styles.main}>
       <div className={styles.container}>
